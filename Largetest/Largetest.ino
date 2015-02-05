@@ -1,4 +1,56 @@
-#define DELAY_AMOUNT 25
+#define DELAY_AMOUNT 0
+
+byte pins[] = {
+  2,3,4,5,6,7,8,9,10,11,12,13,44,45,46};
+int sizePins = 15;
+/*Memory write routine*/
+void memWrite(int pina, int pinb){
+  for(int j =0; j<2; j++){ 
+    //Light column
+    for(int i = 0; i<2; i++){
+      lightCol(pinb);
+    }
+
+    //Light row
+    for(int i = 0; i<200; i++){
+      lightRow(pina);
+    }
+
+  }
+  //Light memory cell 
+
+
+  pinMode(pina, OUTPUT);
+  pinMode(pinb, OUTPUT);
+  digitalWrite(pinb, LOW);
+
+  analogWrite(pina, 255);
+  delay(DELAY_AMOUNT);
+
+  pinMode(pina, INPUT);
+  pinMode(pinb, INPUT);
+  delay(500);
+
+}
+void lightCol(int pinb){
+  for (int i = 0; i < sizePins; ++i)
+  {
+    lightLeds(pins[i],pinb);  
+  } 
+
+}
+void lightRow(int pina){
+  for (int i = 0; i < sizePins; ++i)
+  {
+    lightLeds(pina, pins[i]);  
+  } 
+
+}
+
+
+
+
+
 void lightLeds(int pina, int pinb)
 {
   if (pina != pinb)
@@ -23,8 +75,8 @@ void lightLeds(int pina, int pinb)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,44,46  };
-  int sizeOfPins = 10;
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46    };
+  int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
 }
@@ -64,15 +116,15 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,44,46    };
-    int sizeOfPins = 10;
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46      };
+    int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
 
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9    };
+      5,6,7,8,9        };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -80,11 +132,11 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9    };
+      5,6,7,8,9        };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7    };
+      2,3,4,5,6,7        };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
@@ -97,6 +149,7 @@ void setup(){
 }
 
 void loop(){//the continuous loop; fades 1 led
-  run_unittests();
+  memWrite(6,4);
 }
+
 
