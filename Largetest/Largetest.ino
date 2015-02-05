@@ -5,21 +5,17 @@ byte pins[] = {
 int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
-  for(int j =0; j<2; j++){ 
+ 
     //Light column
-    for(int i = 0; i<2; i++){
+
       lightCol(pinb);
-    }
-
     //Light row
-    for(int i = 0; i<200; i++){
-      lightRow(pina);
-    }
 
-  }
+      lightRow(pina);
   //Light memory cell 
 
 lightLeds(pina,pinb);
+
 
 }
 void lightCol(int pinb){
@@ -36,10 +32,6 @@ void lightRow(int pina){
   } 
 
 }
-
-
-
-
 
 void lightLeds(int pina, int pinb)
 {
