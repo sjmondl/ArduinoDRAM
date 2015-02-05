@@ -19,17 +19,7 @@ void memWrite(int pina, int pinb){
   }
   //Light memory cell 
 
-
-  pinMode(pina, OUTPUT);
-  pinMode(pinb, OUTPUT);
-  digitalWrite(pinb, LOW);
-
-  analogWrite(pina, 255);
-  delay(DELAY_AMOUNT);
-
-  pinMode(pina, INPUT);
-  pinMode(pinb, INPUT);
-  delay(500);
+lightLeds(pina,pinb);
 
 }
 void lightCol(int pinb){
