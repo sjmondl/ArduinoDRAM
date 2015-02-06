@@ -1,4 +1,4 @@
-#define DELAY_AMOUNT 0
+#define DELAY_AMOUNT .5
 
 byte pins[] = {
   2,3,4,5,6,7,8,9,10,11,12,13,44,45,46};
@@ -6,15 +6,14 @@ int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
  
+    for(int k = 0; k<1000; k++){
     //Light column
-
-      lightCol(pinb);
+    lightCol(pinb);
     //Light row
-
-      lightRow(pina);
-  //Light memory cell 
-
-lightLeds(pina,pinb);
+    lightRow(pina);
+    }
+    //Light memory cell 
+    lightLeds(pina,pinb, 4000);
 
 
 }
@@ -43,6 +42,21 @@ void lightLeds(int pina, int pinb)
 
     analogWrite(pina, 255);
     delay(DELAY_AMOUNT);
+
+    pinMode(pina, INPUT);
+    pinMode(pinb, INPUT);
+  }
+}
+void lightLeds(int pina, int pinb,int delay_am)
+{
+  if (pina != pinb)
+  {
+    pinMode(pina, OUTPUT);
+    pinMode(pinb, OUTPUT);
+    digitalWrite(pinb, LOW);
+
+    analogWrite(pina, 255);
+    delay(delay_am);
 
     pinMode(pina, INPUT);
     pinMode(pinb, INPUT);
@@ -130,8 +144,9 @@ void run_unittests()
 void setup(){
 }
 
-void loop(){//the continuous loop; fades 1 led
+void loop(){
   memWrite(6,4);
+\
 }
 
 
