@@ -1,7 +1,7 @@
 #define DELAY_AMOUNT .5
 
 byte pins[] = {
-  2,3,4,5,6,7,8,9,10,11,12,13,44,45,46};
+  2,3,4,5,6,7,8,42,46};
 int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
@@ -65,9 +65,12 @@ void memWrite(int pina, int pinb){
   //Fade the LED to represent capacitor discharge
   //(pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
   // If you decrease brightness, you must increase the rate feild to compensate 
-  fadeLeds(pina,pinb, 50, 100, 0.1 );
+  fadeLeds(pina,pinb, 6, 10, 1);
 
 }
+
+
+
 //Light a column of LEDs. PinA varries while pinb is fixed
 void lightCol(int pinb){
   for (int i = 0; i < sizePins; ++i)
@@ -76,6 +79,8 @@ void lightCol(int pinb){
   } 
 
 }
+
+
 //Light a row of LEDs
 void lightRow(int pina){
   for (int i = 0; i < sizePins; ++i)
@@ -101,6 +106,8 @@ void lightLeds(int pina, int pinb)
     pinMode(pinb, INPUT);
   }
 }
+
+
 //Light LEDs, delay_am controls how long LED remains lit
 void lightLeds(int pina, int pinb,int delay_am)
 {
@@ -117,6 +124,9 @@ void lightLeds(int pina, int pinb,int delay_am)
     pinMode(pinb, INPUT);
   }
 }
+
+
+
 /*Fade the LED to represent capacitor discharge
   (pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
   If you decrease brightness, you must increase the rate feild to compensate 
@@ -140,6 +150,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
   analogWrite(pinb, bright*255);
   delay(delayAm);
 }
+
 
 
 /** 
@@ -180,6 +191,19 @@ void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y)
     for (int j = 0; j < sizeOfPins_y; ++j)
     {
       lightLeds(pins_x[i], pins_y[j]);  
+      
+    } 
+  }
+}
+
+void fadeCycle(byte pins[], int sizeOfPins)
+{
+  for (int i = 0; i < sizeOfPins; ++i)
+  {
+    for (int j = 0; j < sizeOfPins; ++j)
+    {
+      lightLeds(pins[i], pins[j]);  
+      fadeLeds(pins[i],pins[j], 5,1,1);
     } 
   }
 }
@@ -224,8 +248,8 @@ void setup(){
 void loop(){
   //go through a series of cell writes
   memWrite(5,3);
-  memWrite(6,8);
-  memWrite(8,2);
+  
+
 
 }
 
