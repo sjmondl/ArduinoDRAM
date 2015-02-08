@@ -5,15 +5,82 @@ byte pins[] = {
 int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
- 
-    for(int k = 0; k<1000; k++){
+  //Error handling for cells with inconsistant pins, i.e. the diagonal cells
+  //Take the invalid cells and light them using those pins, but alter the row 
+  //and column pins to achieve correct behavior
+  int pinRow = pina;
+  int pinCol = pinb;
+
+
+  if(pina == 45&& pinb ==13){
+    pinRow = 46;
+    pinCol = 46;
+
+  }
+  if(pina == 13&& pinb ==45){
+    pinRow = 44;
+    pinCol = 44;
+  }
+
+
+  if(pina == 13&& pinb ==11){
+    pinRow = 12;
+    pinCol = 12;
+  }
+
+
+
+  if(pina==45 && pinb==9){
+    pinRow = 10;
+    pinCol = 10;
+  }
+
+  if(pina==9 && pinb==7){
+    pinRow = 8;
+    pinCol = 8;
+  }
+
+  if(pina==7 && pinb==5){
+    pinRow = 6;
+    pinCol = 6;
+  }
+  if(pina==5 && pinb==3){ 
+    pinRow = 4;
+    pinCol = 4;
+  }
+  if(pina==3 && pinb==5){
+    pinRow = 3;
+    pinCol = 3;
+  }
+  //Test to make sure right values are being asigned. 
+
+  Serial.print("pina=");
+  Serial.println(pina);
+
+  Serial.print("pinb=");
+  Serial.println(pinb);
+
+  Serial.print("pinRow=");
+  Serial.println(pinRow);
+
+  Serial.print("pinCol=");
+  Serial.println(pinCol);
+
+
+
+
+
+  //Light columns and rows, cycle program 1000 times(~1-3s)
+  for(int k = 0; k<1000; k++){
+
     //Light column
-    lightCol(pinb);
+    lightCol(pinCol);
     //Light row
-    lightRow(pina);
-    }
-    //Light memory cell 
-    lightLeds(pina,pinb, 4000);
+    lightRow(pinRow);
+  }
+
+  //Light memory cell, hold for ~4s 
+  lightLeds(pina,pinb, 4000);
 
 
 }
@@ -71,7 +138,7 @@ void lightLeds(int pina, int pinb,int delay_am)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46    };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46        };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -112,7 +179,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46      };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46              };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -120,7 +187,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9        };
+      5,6,7,8,9                };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -128,11 +195,11 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9        };
+      5,6,7,8,9                };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7        };
+      2,3,4,5,6,7                };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
@@ -142,11 +209,14 @@ void run_unittests()
 // Subroutines
 
 void setup(){
+  Serial.begin(9600);
 }
 
 void loop(){
-  memWrite(6,4);
-\
+  memWrite(3,5);
+
 }
+
+
 
 
