@@ -15,20 +15,17 @@ void memWrite(int pina, int pinb){
   if(pina == 45&& pinb ==13){
     pinRow = 46;
     pinCol = 46;
-
   }
+  
   if(pina == 13&& pinb ==45){
     pinRow = 44;
     pinCol = 44;
   }
 
-
   if(pina == 13&& pinb ==11){
     pinRow = 12;
     pinCol = 12;
   }
-
-
 
   if(pina==45 && pinb==9){
     pinRow = 10;
@@ -52,24 +49,7 @@ void memWrite(int pina, int pinb){
     pinRow = 3;
     pinCol = 3;
   }
-  //Test to make sure right values are being asigned. 
-
-  Serial.print("pina=");
-  Serial.println(pina);
-
-  Serial.print("pinb=");
-  Serial.println(pinb);
-
-  Serial.print("pinRow=");
-  Serial.println(pinRow);
-
-  Serial.print("pinCol=");
-  Serial.println(pinCol);
-
-
-
-
-
+ 
   //Light columns and rows, cycle program 1000 times(~1-3s)
   for(int k = 0; k<1000; k++){
 
@@ -80,10 +60,15 @@ void memWrite(int pina, int pinb){
   }
 
   //Light memory cell, hold for ~4s 
-  lightLeds(pina,pinb, 4000);
-
+  // lightLeds(pina,pinb, 4000);
+  
+  //Fade the LED to represent capacitor discharge
+  //(pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
+  // If you decrease brightness, you must increase the rate feild to compensate 
+  fadeLeds(pina,pinb, 50, 100, 0.1 );
 
 }
+//Light a column of LEDs. PinA varries while pinb is fixed
 void lightCol(int pinb){
   for (int i = 0; i < sizePins; ++i)
   {
@@ -91,6 +76,7 @@ void lightCol(int pinb){
   } 
 
 }
+//Light a row of LEDs
 void lightRow(int pina){
   for (int i = 0; i < sizePins; ++i)
   {
@@ -99,6 +85,7 @@ void lightRow(int pina){
 
 }
 
+//Light LEDs, pina fixed, while pinb cycles
 void lightLeds(int pina, int pinb)
 {
   if (pina != pinb)
@@ -114,6 +101,7 @@ void lightLeds(int pina, int pinb)
     pinMode(pinb, INPUT);
   }
 }
+//Light LEDs, delay_am controls how long LED remains lit
 void lightLeds(int pina, int pinb,int delay_am)
 {
   if (pina != pinb)
@@ -129,8 +117,30 @@ void lightLeds(int pina, int pinb,int delay_am)
     pinMode(pinb, INPUT);
   }
 }
+/*Fade the LED to represent capacitor discharge
+  (pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
+  If you decrease brightness, you must increase the rate feild to compensate 
+  void fadeLeds(int pina, int pinb, double rate,double delayAm, double bright)
+  PinA will be set to relative high to light the correct cell LED
+*/
+void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
+{
+  pinMode(pina, OUTPUT);
+  pinMode(pinb, OUTPUT);
+  analogWrite(pina,(bright*255));
+ int i =0;
 
-// Subroutines
+  while(i<bright*250){
+
+
+    analogWrite(pinb, i);
+    delay(rate);
+    ++i;
+  }
+  analogWrite(pinb, bright*255);
+  delay(delayAm);
+}
+
 
 /** 
  * Run the default cycle
@@ -138,7 +148,7 @@ void lightLeds(int pina, int pinb,int delay_am)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46        };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46    };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -179,7 +189,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46              };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                      };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -187,7 +197,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9                };
+      5,6,7,8,9                        };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -195,27 +205,31 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9                };
+      5,6,7,8,9                        };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7                };
+      2,3,4,5,6,7                        };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
 }
 
 
-// Subroutines
+
 
 void setup(){
-  Serial.begin(9600);
 }
 
 void loop(){
-  memWrite(3,5);
+  //go through a series of cell writes
+  memWrite(5,3);
+  memWrite(6,8);
+  memWrite(8,2);
 
 }
+
+
 
 
 
