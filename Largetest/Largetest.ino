@@ -1,4 +1,16 @@
 #define DELAY_AMOUNT .5
+/*Subroutines included in this file:
+// void memWrite(int pina,int pinb), lights a row and a column, then the selected cell. Fades selected cell to 0.
+// void lightRow(int pinb), lights the row associated with pinb
+// void lightCol(intpina), lights the column associated with pina
+// void lightLeds(int pina, int pinb), lights the LED associated with pina,pinb for the amount determined by DELAY_AMOUNT
+// void lightLeds(int pina, int pinb, delay_am), lights the LED associated with pina,pinb for the amount determined by delay_am
+// void fadeLeds(int pina, int pinb), Fades the LED associated with pina, pinb
+// void cycle(byte pins[], int sizeOfPins); cycles through all hooked up LEDs one at a time
+// void cycle(), same as above, use this one to call it for testing
+// void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y), same as above
+// void run_unittests(), testing program
+*/
 
 byte pins[] = {
   2,3,4,5,6,7,8,42,46};
@@ -247,8 +259,8 @@ void setup(){
 
 void loop(){
   //go through a series of cell writes
-  memWrite(5,3);
-  
+cycle();
+ 
 
 
 }
