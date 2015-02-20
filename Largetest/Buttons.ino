@@ -1,12 +1,13 @@
 
-void setup() {
-  Serial.begin(9600);// initialize serial communication at 9600 bits per second:
-}
+
 
 int lastbut = 0;//last button pressed
+void setSerial(){
+    Serial.begin(9600);// initialize serial communication at 9600 bits per second:
 
+}
 int getButton() {
-  
+
   int currentBut;
   int sum=0;
   float voltage;
@@ -27,40 +28,44 @@ int getButton() {
   else if (voltage>1.8 && voltage<2.2) currentBut=5;
   else if (voltage>2.3 && voltage<2.7) currentBut=6; 
   else currentBut=0;
-  
+
   return currentBut;
 
 }
 
-void loop ()
+
+void checkPressed ()
 {
+  setSerial();
+  
   int currentBut;
   int button2, pressed_button;  
   int a=0;
   while(a==0)
   { 
     currentBut = getButton();
-    
+
     if (currentBut != lastbut)
     {
-        delay(50);        // debounce
-  //      button2 = getButton();                  //alternative code, registers all presses, but 
-  //      if(button2!=0) Serial.println(button2); //will occasionally register wrong press.  
-        button2 = getButton();                                  //This code has no errors thrown about which button
-        if (currentBut == button2)                              // is pressed, but will occasionally not register a
-        {                                                       //button press at all
-           lastbut = currentBut;                                //    
-           pressed_button = currentBut;                         // 
-           if(pressed_button!=0) Serial.println(pressed_button);//replace this with the variable you use to indicate a pushed button
-           a=1;
-        }               //
-        else
-        {
-          a=0;
-        }
+      delay(50);        // debounce
+      //      button2 = getButton();                  //alternative code, registers all presses, but 
+      //      if(button2!=0) Serial.println(button2); //will occasionally register wrong press.  
+      button2 = getButton();                                  //This code has no errors thrown about which button
+      if (currentBut == button2)                              // is pressed, but will occasionally not register a
+      {                                                       //button press at all
+        lastbut = currentBut;                                //    
+        pressed_button = currentBut;                         // 
+        if(pressed_button!=0) Serial.println(pressed_button);//replace this with the variable you use to indicate a pushed button
+        a=1;
+      }               //
+      else
+      {
+        a=0;
+      }
     }
   }
 }
+
 
 
 ////old obsolete code:
@@ -70,6 +75,8 @@ void loop ()
 //      lastbut = currentBut;
 //      if(currentBut!=0) Serial.println(lastbut);
 //    }
-  //Serial.println(count);
-   // Serial.println(but);
-  //Serial.println(voltage);
+//Serial.println(count);
+// Serial.println(but);
+//Serial.println(voltage);
+
+

@@ -1,19 +1,22 @@
 #define DELAY_AMOUNT .5
+#define WRITE_TIME 7 //dont reduce past 5, teh arduino cant deacivate pins fast enough to prevent artifacts
+
+
 /*Subroutines included in this file:
-// void memWrite(int pina,int pinb), lights a row and a column, then the selected cell. Fades selected cell to 0.
-// void lightRow(int pinb), lights the row associated with pinb
-// void lightCol(intpina), lights the column associated with pina
-// void lightLeds(int pina, int pinb), lights the LED associated with pina,pinb for the amount determined by DELAY_AMOUNT
-// void lightLeds(int pina, int pinb, delay_am), lights the LED associated with pina,pinb for the amount determined by delay_am
-// void fadeLeds(int pina, int pinb), Fades the LED associated with pina, pinb
-// void cycle(byte pins[], int sizeOfPins); cycles through all hooked up LEDs one at a time
-// void cycle(), same as above, use this one to call it for testing
-// void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y), same as above
-// void run_unittests(), testing program
-*/
+ // void memWrite(int pina,int pinb), lights a row and a column, handles errors for cells that can
+ // void lightRow(int pinb), lights the row associated with pinb
+ // void lightCol(intpina), lights the column associated with pina
+ // void lightLeds(int pina, int pinb), lights the LED associated with pina,pinb for the amount determined by DELAY_AMOUNT
+ // void lightLeds(int pina, int pinb, delay_am), lights the LED associated with pina,pinb for the amount determined by delay_am
+ // void fadeLeds(int pina, int pinb), Fades the LED associated with pina, pinb
+ // void cycle(byte pins[], int sizeOfPins); cycles through all hooked up LEDs one at a time
+ // void cycle(), same as above, use this one to call it for testing
+ // void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y), same as above
+ // void run_unittests(), testing program
+ */
 
 byte pins[] = {
-  2,3,4,5,6,7,8,42,46};
+  2,3,4,5,6,7,8,9,10,11,12,13,44,45,46  };
 int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
@@ -28,7 +31,7 @@ void memWrite(int pina, int pinb){
     pinRow = 46;
     pinCol = 46;
   }
-  
+
   if(pina == 13&& pinb ==45){
     pinRow = 44;
     pinCol = 44;
@@ -61,46 +64,87 @@ void memWrite(int pina, int pinb){
     pinRow = 3;
     pinCol = 3;
   }
- 
-  //Light columns and rows, cycle program 1000 times(~1-3s)
-  for(int k = 0; k<1000; k++){
 
-    //Light column
-    lightCol(pinCol);
-    //Light row
-    lightRow(pinRow);
-  }
+  //Light columns and rows, cycle program 1000 times(~1-3s)
+for (int k = 0; k<100; ++k)
+{
+  //Light column
+  lightCol(pinCol);
+  //Light row
+  lightRow(pinRow);
+ lightCol(6);
+}
+
 
   //Light memory cell, hold for ~4s 
   // lightLeds(pina,pinb, 4000);
-  
-  //Fade the LED to represent capacitor discharge
-  //(pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
-  // If you decrease brightness, you must increase the rate feild to compensate 
-  fadeLeds(pina,pinb, 6, 10, 1);
+  fadeLeds(pina,pinb, 10, 100, 1 );
 
 }
 
 
 
-//Light a column of LEDs. PinA varries while pinb is fixed
-void lightCol(int pinb){
+//Light a row of LEDs. PinA varries while pinb is fixed
+void lightRow(int pinb){
+
+
+
+  pinMode(pinb, OUTPUT);
+  digitalWrite(pinb, LOW);
+
+
   for (int i = 0; i < sizePins; ++i)
-  {
-    lightLeds(pins[i],pinb);  
-  } 
+  {    
+    pinMode(pins[i], OUTPUT);
+    if (pins[i] != pinb){ 
+      digitalWrite(pins[i], HIGH);
+    }
+  }
+  delay(WRITE_TIME);
+  for (int j=0;j < sizePins; ++j)
+  { 
+    pinMode(pins[j], INPUT);
+  }
+
+  pinMode(pinb, INPUT);
 
 }
 
 
-//Light a row of LEDs
-void lightRow(int pina){
+
+
+
+//Light a Column of LEDs
+void lightCol(int pina){
+
+
+  pinMode(pina, OUTPUT);
+  digitalWrite(pina, HIGH);
+
+
   for (int i = 0; i < sizePins; ++i)
-  {
-    lightLeds(pina, pins[i]);  
-  } 
+  {    
+    pinMode(pins[i], OUTPUT);
+    if (pins[i] != pina){ 
+      digitalWrite(pins[i], LOW);
+
+    }
+  }
+  delay(WRITE_TIME);
+  for (int j=0;j < sizePins; ++j)
+  { 
+    pinMode(pins[j], INPUT);
+  }
+
+  pinMode(pina, INPUT);
 
 }
+
+
+
+
+
+
 
 //Light LEDs, pina fixed, while pinb cycles
 void lightLeds(int pina, int pinb)
@@ -140,17 +184,17 @@ void lightLeds(int pina, int pinb,int delay_am)
 
 
 /*Fade the LED to represent capacitor discharge
-  (pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
-  If you decrease brightness, you must increase the rate feild to compensate 
-  void fadeLeds(int pina, int pinb, double rate,double delayAm, double bright)
-  PinA will be set to relative high to light the correct cell LED
-*/
+ (pina, pinb, rate to fade at(higher=slower), time to hold at 0, percentage max brightness of LED)
+ If you decrease brightness, you must increase the rate feild to compensate 
+ void fadeLeds(int pina, int pinb, double rate,double delayAm, double bright)
+ PinA will be set to relative high to light the correct cell LED
+ */
 void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
 {
   pinMode(pina, OUTPUT);
   pinMode(pinb, OUTPUT);
   analogWrite(pina,(bright*255));
- int i =0;
+  int i =0;
 
   while(i<bright*250){
 
@@ -171,7 +215,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46    };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46        };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -203,7 +247,7 @@ void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y)
     for (int j = 0; j < sizeOfPins_y; ++j)
     {
       lightLeds(pins_x[i], pins_y[j]);  
-      
+
     } 
   }
 }
@@ -225,7 +269,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                      };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                             };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -233,7 +277,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9                        };
+      5,6,7,8,9                                };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -241,11 +285,11 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9                        };
+      5,6,7,8,9                                };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7                        };
+      2,3,4,5,6,7                                };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
@@ -259,11 +303,13 @@ void setup(){
 
 void loop(){
   //go through a series of cell writes
-cycle();
+  //the delays help with some stray lighting
+
  
 
-
 }
+
+
 
 
 
