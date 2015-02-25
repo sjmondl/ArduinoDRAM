@@ -1,82 +1,68 @@
+//void setup() 
+//{
+//  pinMode(52, INPUT);
+//  pinMode(53, INPUT);  
+//  pinMode(50, INPUT);  
+//  pinMode(51, INPUT);
+//  Serial.begin(9600);
+//}
+//  
+//int readbutton()
+//{
+//  int buttonState[4];  
+//  int last_button[4];
+//  for (int i=50; i<=53; i++)//poles each button
+//  {
+//    buttonState[i-53] = digitalRead(i);//sets button state to high if pushed, low if not
+//    if (buttonState[i-53] != last_button[i-53]) //if the button is the same value as last execution of code, exits
+//    { 
+//      delay(50);//debounces
+//      if (buttonState[i-53] == HIGH)//only proceeds if button pressed
+//      {
+//        Serial.println(i);
+//        return(i);
+//      }
+//    }
+//    last_button[i-53] = buttonState[i-53];//stores current value for comparison on next loop execution
+//  } 
+//}  
+//
+//
+//void loop()
+//{
+//  int pressed_button;
+//  pressed_button = readbutton();
+//}  
+
+
+//for some reason running as a function in the above code screwed 
+//things up so sometimes it didn't read and sometimes it reads multiple presses
 
 
 
-int lastbut = 0;//last button pressed
-void setSerial(){
-    Serial.begin(9600);// initialize serial communication at 9600 bits per second:
 
-}
-int getButton() {
-
-  int currentBut;
-  int sum=0;
-  float voltage;
-  int sensorValue, i;
-
-  for (i=0; i<5; i++)
-  {
-    sum += analogRead(A0);
-  }
-  sensorValue = sum/5;//averaging to lessen effects of noise
-  voltage = sensorValue * (5.0 / 1023.0);// Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
-  //Serial.println(voltage);//for testing
-  if (voltage>3) currentBut=0;
-  else if (voltage>-.1 && voltage<.2) currentBut=1;
-  else if (voltage>.3 && voltage<.6) currentBut=2;
-  else if (voltage>.8 && voltage<1.2) currentBut=3;
-  else if (voltage>1.3 && voltage<1.7) currentBut=4;
-  else if (voltage>1.8 && voltage<2.2) currentBut=5;
-  else if (voltage>2.3 && voltage<2.7) currentBut=6; 
-  else currentBut=0;
-
-  return currentBut;
-
-}
-
-
-void checkPressed ()
+  int buttonState[4];  
+  int last_button[4];
+void buttonSelection()
 {
-  setSerial();
-  
-  int currentBut;
-  int button2, pressed_button;  
-  int a=0;
-  while(a==0)
-  { 
-    currentBut = getButton();
+  pinMode(52, INPUT);
+  pinMode(53, INPUT);  
+  pinMode(50, INPUT);  
+  pinMode(51, INPUT);
+  Serial.begin(9600);
 
-    if (currentBut != lastbut)
-    {
-      delay(50);        // debounce
-      //      button2 = getButton();                  //alternative code, registers all presses, but 
-      //      if(button2!=0) Serial.println(button2); //will occasionally register wrong press.  
-      button2 = getButton();                                  //This code has no errors thrown about which button
-      if (currentBut == button2)                              // is pressed, but will occasionally not register a
-      {                                                       //button press at all
-        lastbut = currentBut;                                //    
-        pressed_button = currentBut;                         // 
-        if(pressed_button!=0) Serial.println(pressed_button);//replace this with the variable you use to indicate a pushed button
-        a=1;
-      }               //
-      else
+  for (int i=50; i<=53; i++)//polls each button
+  {
+    buttonState[i-53] = digitalRead(i);//sets button state to high if pushed, low if not
+    if (buttonState[i-53] != last_button[i-53]) //if the button is the same value as last execution of code, exits
+    { 
+      delay(30);//debounces
+      if (buttonState[i-53] == HIGH)//only proceeds if button pressed
       {
-        a=0;
+        Serial.println(i);//put the output variable for the state machine here
       }
     }
-  }
-}
-
-
-
-////old obsolete code:
-//  if (currentBut!=lastbut)
-//    {
-//      delay(5);
-//      lastbut = currentBut;
-//      if(currentBut!=0) Serial.println(lastbut);
-//    }
-//Serial.println(count);
-// Serial.println(but);
-//Serial.println(voltage);
-
+    last_button[i-53] = buttonState[i-53];//stores current value for comparison on next loop execution
+  } 
+}  
 

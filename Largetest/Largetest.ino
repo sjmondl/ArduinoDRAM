@@ -1,6 +1,8 @@
+#include <LiquidCrystal.h>
+
 #define DELAY_AMOUNT .5
 #define WRITE_TIME 7 //dont reduce past 5, teh arduino cant deacivate pins fast enough to prevent artifacts
-
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
 
 /*Subroutines included in this file:
  // void memWrite(int pina,int pinb), lights a row and a column, handles errors for cells that can
@@ -20,6 +22,7 @@ byte pins[] = {
 int sizePins = 15;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
+
   //Error handling for cells with inconsistant pins, i.e. the diagonal cells
   //Take the invalid cells and light them using those pins, but alter the row 
   //and column pins to achieve correct behavior
@@ -66,14 +69,14 @@ void memWrite(int pina, int pinb){
   }
 
   //Light columns and rows, cycle program 1000 times(~1-3s)
-for (int k = 0; k<100; ++k)
-{
-  //Light column
-  lightCol(pinCol);
-  //Light row
-  lightRow(pinRow);
- lightCol(6);
-}
+  for (int k = 0; k<100; ++k)
+  {
+    //Light column
+    lightCol(pinCol);
+    //Light row
+    lightRow(pinRow);
+    lightCol(6);
+  }
 
 
   //Light memory cell, hold for ~4s 
@@ -215,7 +218,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46        };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46          };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -269,7 +272,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                             };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                                 };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -277,7 +280,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9                                };
+      5,6,7,8,9                                    };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -285,29 +288,35 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9                                };
+      5,6,7,8,9                                    };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7                                };
+      2,3,4,5,6,7                                    };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
+
 }
 
 
 
 
 void setup(){
+  lcd.begin(16, 2);
+  lcd.print("MemWrite           ");//the space padding is needed to keep a bunch of H's from being printed 
 }
+
 
 void loop(){
   //go through a series of cell writes
   //the delays help with some stray lighting
-
  
 
+
+
 }
+
 
 
 
