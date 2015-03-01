@@ -1,7 +1,8 @@
 #include <LiquidCrystal.h>
 
-#define DELAY_AMOUNT .5
-#define WRITE_TIME 7 //dont reduce past 5, teh arduino cant deacivate pins fast enough to prevent artifacts
+#define DELAY_AMOUNT 0
+
+#define WRITE_TIME 5 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
 
 /*Subroutines included in this file:
@@ -18,10 +19,12 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
  */
 
 byte pins[] = {
-  2,3,4,5,6,7,8,9,10,11,12,13,44,45,46  };
+  13,10,9,8,7,6,22,24,26 };
 int sizePins = 15;
+int prgmSelected = 0;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
+  prgmSelected = 1;
 
   //Error handling for cells with inconsistant pins, i.e. the diagonal cells
   //Take the invalid cells and light them using those pins, but alter the row 
@@ -82,7 +85,7 @@ void memWrite(int pina, int pinb){
   //Light memory cell, hold for ~4s 
   // lightLeds(pina,pinb, 4000);
   fadeLeds(pina,pinb, 10, 100, 1 );
-
+ 
 }
 
 
@@ -140,6 +143,7 @@ void lightCol(int pina){
   }
 
   pinMode(pina, INPUT);
+
 
 }
 
@@ -208,6 +212,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
   }
   analogWrite(pinb, bright*255);
   delay(delayAm);
+
 }
 
 
@@ -304,14 +309,21 @@ void run_unittests()
 
 void setup(){
   lcd.begin(16, 2);
-  lcd.print("MemWrite           ");//the space padding is needed to keep a bunch of H's from being printed 
+  
 }
 
 
 void loop(){
   //go through a series of cell writes
   //the delays help with some stray lighting
- 
+memWrite(13,9);
+if(prgmSelected == 1){
+   lcd.noAutoscroll();
+lcd.print("MemWrite Running");
+lcd.setCursor(0,0);
+
+  
+}
 
 
 
