@@ -1,6 +1,6 @@
 #include <LiquidCrystal.h>
 
-#define DELAY_AMOUNT 0
+#define DELAY_AMOUNT 10
 
 #define WRITE_TIME 5 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
@@ -19,7 +19,7 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
  */
 
 byte pins[] = {
-  13,10,9,8,7,6,22,24,26 };
+  13,10,9,8,7,6,22,24,26, 44,45,46 };
 int sizePins = 15;
 int prgmSelected = 0;
 /*Memory write routine*/
@@ -78,14 +78,14 @@ void memWrite(int pina, int pinb){
     lightCol(pinCol);
     //Light row
     lightRow(pinRow);
-    lightCol(6);
+
   }
 
 
   //Light memory cell, hold for ~4s 
   // lightLeds(pina,pinb, 4000);
   fadeLeds(pina,pinb, 10, 100, 1 );
- 
+
 }
 
 
@@ -223,7 +223,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46          };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46              };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -277,7 +277,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                                 };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                                         };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -285,7 +285,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9                                    };
+      5,6,7,8,9                                            };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -293,11 +293,11 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9                                    };
+      5,6,7,8,9                                            };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7                                    };
+      2,3,4,5,6,7                                            };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
@@ -309,25 +309,26 @@ void run_unittests()
 
 void setup(){
   lcd.begin(16, 2);
-  
+
 }
 
 
 void loop(){
   //go through a series of cell writes
   //the delays help with some stray lighting
-memWrite(13,9);
-if(prgmSelected == 1){
-   lcd.noAutoscroll();
-lcd.print("MemWrite Running");
-lcd.setCursor(0,0);
+  lightRow(13);
+  lcd.noAutoscroll();
+  lcd.print("MemWrite Running");
+  lcd.setCursor(0,0);
 
-  
+
+
+
+
+
 }
 
 
-
-}
 
 
 
