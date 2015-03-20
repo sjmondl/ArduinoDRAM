@@ -3,7 +3,7 @@
 #define DELAY_AMOUNT 10
 
 #define WRITE_TIME 5 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
+
 
 /*Subroutines included in this file:
  // void memWrite(int pina,int pinb), lights a row and a column, handles errors for cells that can
@@ -19,12 +19,22 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
  */
 
 byte pins[] = {
-  13,10,9,8,7,6,22,24,26, 44,45,46 };
+  2,3,4,5,6,7,8,9,10,11,12,13,44,45,46};
+  
+byte topBitline[] = { 45,13,11};
+byte bottomBitline[] ={7,5,3};
+
+byte senseAmpRow[]={9};
+
+byte wordlines[]={46,44,12,10,8,6,4,2};
+byte noCellWordlines[]={45,13, 11,9,7,5,3};
+
+
 int sizePins = 15;
 int prgmSelected = 0;
 /*Memory write routine*/
 void memWrite(int pina, int pinb){
-  prgmSelected = 1;
+
 
   //Error handling for cells with inconsistant pins, i.e. the diagonal cells
   //Take the invalid cells and light them using those pins, but alter the row 
@@ -102,19 +112,30 @@ void lightRow(int pinb){
   for (int i = 0; i < sizePins; ++i)
   {    
     pinMode(pins[i], OUTPUT);
-    if (pins[i] != pinb){ 
+    if ((pins[i] != pinb && pins[i]) ){ 
+
       digitalWrite(pins[i], HIGH);
+      if( pinb==46 && pins[i] ==46){
+        pinMode(13, INPUT);
+      }
+      if(pinb ==11 && pins[i] ==13){
+        pinMode(13, INPUT);
+      }
     }
   }
+
+
   delay(WRITE_TIME);
-  for (int j=0;j < sizePins; ++j)
-  { 
+  for (int j=0;j < sizePins; ++j) {
     pinMode(pins[j], INPUT);
+
+    pinMode(pinb, INPUT);
+
+
+
   }
-
-  pinMode(pinb, INPUT);
-
 }
+
 
 
 
@@ -149,10 +170,6 @@ void lightCol(int pina){
 
 
 
-
-
-
-
 //Light LEDs, pina fixed, while pinb cycles
 void lightLeds(int pina, int pinb)
 {
@@ -170,7 +187,15 @@ void lightLeds(int pina, int pinb)
   }
 }
 
+void lightSingle(int pina, int pinb){
+  pinMode(pina, OUTPUT);
+  pinMode(pinb, OUTPUT);
+  digitalWrite(pinb, LOW);
 
+  analogWrite(pina, 255);
+
+
+}
 //Light LEDs, delay_am controls how long LED remains lit
 void lightLeds(int pina, int pinb,int delay_am)
 {
@@ -223,7 +248,7 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
 void cycle()
 {
   byte pins[] = {
-    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46              };
+    2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                };
   int sizeOfPins = 15;
 
   cycle(pins, sizeOfPins);
@@ -277,7 +302,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                                         };
+      2,3,4,5,6,7,8,9,10,11,12,13,44,45,46                                             };
     int sizeOfPins = 15;
     cycle(pins, sizeOfPins);
   }
@@ -285,7 +310,7 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins[] = {
-      5,6,7,8,9                                            };
+      5,6,7,8,9                                                };
     byte sizeOfPins = 5;
     cycle(pins, sizeOfPins);
   }
@@ -293,41 +318,106 @@ void run_unittests()
   for (int i = 0; i < 5; ++i)
   {
     byte pins_x[] = {
-      5,6,7,8,9                                            };
+      5,6,7,8,9                                                };
     byte sizeOfPins_x = 5;
 
     byte pins_y[] = {
-      2,3,4,5,6,7                                            };
+      2,3,4,5,6,7                                                };
     byte sizeOfPins_y = 6;
     cycle(pins_x, pins_y, sizeOfPins_x, sizeOfPins_y);
   }
 
 }
+/*Light row north of sense amps
+ */
+void lightTopBitline(int pinRow){ 
+
+  pinMode(pinRow, OUTPUT);
+  digitalWrite(pinRow, LOW);
+  
+  for(int i =0; i<3; i++){
+    pinMode(topBitline[i], OUTPUT);
+    if ((topBitline[i] != pinRow) ){ 
+      digitalWrite(topBitline[i], HIGH);
+    }
+  }
+  
+   delay(WRITE_TIME);
+  for (int j=0;j < 3; ++j) {
+    pinMode(topBitline[j], INPUT);
+    pinMode(pinRow, INPUT);
+
+
+
+  }
+}
+/*Light row south of sense amps*/
+void lightbtmBitline(int pinRow){ 
+
+  pinMode(pinRow, OUTPUT);
+  digitalWrite(pinRow, LOW);
+  
+  for(int i =0; i<3; i++){
+    pinMode(bottomBitline[i], OUTPUT);
+    if ((bottomBitline[i] != pinRow) ){ 
+      digitalWrite(bottomBitline[i], HIGH);
+    }
+  }
+  
+   delay(WRITE_TIME);
+  for (int j=0;j < 3; ++j) {
+    pinMode(bottomBitline[j], INPUT);
+    pinMode(pinRow, INPUT);
+
+
+
+  }
+}
+
+//ligth top word lines by setting pin selection high and cycleing through others and setting them low
+void lightWord(int pina){
+
+
+
+
+  pinMode(pina, OUTPUT);
+  digitalWrite(pina, HIGH);
+
+  for (int i = 0; i < 8; ++i)
+  {  
+  if(pina != noCellWordlines[i]){  
+    pinMode(noCellWordlines[i], OUTPUT);
+  digitalWrite(noCellWordlines[i], LOW);
+
+  }
+  }
+  delay(WRITE_TIME);
+  for (int j=0;j < 8; ++j)
+  { 
+    pinMode(noCellWordlines[j], INPUT);
+     pinMode(pina, INPUT);
+}
+}
+
+
+
+
 
 
 
 
 void setup(){
-  lcd.begin(16, 2);
+
+
+
+
 
 }
-
 
 void loop(){
-  //go through a series of cell writes
-  //the delays help with some stray lighting
-  lightRow(13);
-  lcd.noAutoscroll();
-  lcd.print("MemWrite Running");
-  lcd.setCursor(0,0);
-
-
-
-
-
+lightWord(12);
 
 }
-
 
 
 
