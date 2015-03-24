@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-//LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
+
 LiquidCrystal lcd(30, 32, 34, 35, 33, 31); //set up LCD pins
 
 void setup() 

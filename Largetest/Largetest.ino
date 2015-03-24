@@ -1,8 +1,8 @@
 #include <LiquidCrystal.h>
 
-#define DELAY_AMOUNT 10
+#define DELAY_AMOUNT 1
 
-#define WRITE_TIME 5 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
+#define WRITE_TIME 500 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
 
 
 /*Subroutines included in this file:
@@ -187,11 +187,56 @@ void lightLeds(int pina, int pinb)
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+//Light Single LED
+//////////////////////////////////////////////////////////////////////////////////
 void lightSingle(int pina, int pinb){
+  
+   int pinRow = pina;
+  int pinCol = pinb;
+
+
+  if(pina == 46&& pinb ==46){
+    pina = 45;
+    pinb = 13;
+  }
+
+  if(pina == 45&& pinb ==45){
+    pina = 13;
+    pinb = 45;
+  }
+
+  if(pina == 12&& pinb ==12){
+    pina = 13;
+    pinb = 11;
+  }
+
+  if(pina==10 && pinb==10){
+    pina = 45;
+    pinb = 9;
+  }
+
+  if(pina==8 && pinb==8){
+    pina = 9;
+    pinb = 7;
+  }
+
+  if(pina==6 && pinb==6){
+    pina = 7;
+    pinb = 5;
+  }
+  if(pina==4 && pinb==4){ 
+    pina = 5;
+    pinb = 3;
+  }
+  if(pina==3 && pinb==3){
+    pina = 3;
+    pinb = 5;
+  }
+  
   pinMode(pina, OUTPUT);
   pinMode(pinb, OUTPUT);
   digitalWrite(pinb, LOW);
-
   analogWrite(pina, 255);
 
 
@@ -328,70 +373,158 @@ void run_unittests()
   }
 
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Light row north of sense amps
- */
-void lightTopBitline(int pinRow){ 
+ *///////////////////////////////////////////////////////////////////////////////////////////////////
+void lightTopBitline(int pina){ 
 
-  pinMode(pinRow, OUTPUT);
-  digitalWrite(pinRow, LOW);
+  pinMode(pina, OUTPUT);
+  digitalWrite(pina, LOW);
   
   for(int i =0; i<3; i++){
-    pinMode(topBitline[i], OUTPUT);
-    if ((topBitline[i] != pinRow) ){ 
+ 
+    if ((topBitline[i] != pina) ){ 
+       if(pina == 45&&  topBitline[i] ==13){
+        pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+
+  if(pina == 13&&  topBitline[i] ==45){
+    pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+
+  if(pina == 13&&  topBitline[i] ==11){
+    pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+
+  if(pina==45 &&  topBitline[i]==9){
+    pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+
+  if(pina==9 &&  topBitline[i]==7){
+    pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+
+  if(pina==7 &&  topBitline[i]==5){
+    pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+  if(pina==5 &&  topBitline[i]==3){ 
+   pinMode(pina, INPUT);
+        pinMode( topBitline[i], INPUT);
+  }
+  if(pina==3 &&  topBitline[i]==5){
+    pinMode(pina, INPUT);
+     pinMode( topBitline[i], INPUT);
+  }
+  else{
+    
       digitalWrite(topBitline[i], HIGH);
+        pinMode(topBitline[i], OUTPUT);
+       
+       
     }
   }
+  }
   
-   delay(WRITE_TIME);
+  // delay(WRITE_TIME);
   for (int j=0;j < 3; ++j) {
     pinMode(topBitline[j], INPUT);
-    pinMode(pinRow, INPUT);
+    pinMode(pina, INPUT);
 
 
 
   }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Light row south of sense amps*/
-void lightbtmBitline(int pinRow){ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+void lightbtmBitline(int pina){ 
 
-  pinMode(pinRow, OUTPUT);
-  digitalWrite(pinRow, LOW);
+  pinMode(pina, OUTPUT);
+  digitalWrite(pina, LOW);
   
   for(int i =0; i<3; i++){
-    pinMode(bottomBitline[i], OUTPUT);
-    if ((bottomBitline[i] != pinRow) ){ 
-      digitalWrite(bottomBitline[i], HIGH);
-    }
-  }
   
-   delay(WRITE_TIME);
+    if ((bottomBitline[i] != pina) ){ 
+      
+       if(pina == 45&&  bottomBitline[i] ==13){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+
+  if(pina == 13&&  bottomBitline[i] ==45){
+    pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+
+  if(pina == 13&&  bottomBitline[i] ==11){
+    pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+
+  if(pina==45 &&  bottomBitline[i]==9){
+    pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+
+  if(pina==9 &&  bottomBitline[i]==7){
+    pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+
+  if(pina==7 &&  bottomBitline[i]==5){
+    pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+  if(pina==5 &&  bottomBitline[i]==3){ 
+   pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+  }
+  if(pina==3 &&  bottomBitline[i]==5){
+    pinMode(pina, INPUT);
+     pinMode( bottomBitline[i], INPUT);
+  }
+  else{
+    
+      digitalWrite(bottomBitline[i], HIGH);
+       pinMode(bottomBitline[i], OUTPUT);
+    }
+   }
+  }
+    
+  
+ //  delay(WRITE_TIME);
   for (int j=0;j < 3; ++j) {
     pinMode(bottomBitline[j], INPUT);
-    pinMode(pinRow, INPUT);
+    pinMode(pina, INPUT);
 
 
 
   }
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 //ligth top word lines by setting pin selection high and cycleing through others and setting them low
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 void lightWord(int pina){
-
-
 
 
   pinMode(pina, OUTPUT);
   digitalWrite(pina, HIGH);
 
   for (int i = 0; i < 8; ++i)
-  {  
-  if(pina != noCellWordlines[i]){  
+{
     pinMode(noCellWordlines[i], OUTPUT);
   digitalWrite(noCellWordlines[i], LOW);
+  
 
+  
   }
-  }
-  delay(WRITE_TIME);
+
   for (int j=0;j < 8; ++j)
   { 
     pinMode(noCellWordlines[j], INPUT);
@@ -399,6 +532,23 @@ void lightWord(int pina){
 }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Light word and bit lines
+//
+//
+ void bitWord(int pina, int pinb){
+
+  
+   lightWord(pina);
+   if(pina >9){
+   lightTopBitline(pinb);
+   }
+   if(pina <9){
+     lightbtmBitline(pinb);
+   }
+   
+ 
+ }
 
 
 
@@ -413,10 +563,28 @@ void setup(){
 
 
 }
+void WordCycle(){
+for(int i = 0; i<8; i++){
+  lightWord(wordlines[i]);
+}
+}
+void bitCycle(){
+  for(int i = 0; i<8; ++i){
+lightTopBitline(wordlines[i]);
+}
+  for(int i = 0; i<8; ++i){
+lightbtmBitline(wordlines[i]);{
 
+}  
+  }
+
+}
 void loop(){
-lightWord(12);
+for(int i = 0; i<8; ++i){
+bitWord(4,4);
 
+lightSingle(4,4);
+}
 }
 
 
