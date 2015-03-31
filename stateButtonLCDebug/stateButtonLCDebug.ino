@@ -10,7 +10,7 @@ void setup()
   pinMode(51, INPUT);
   //Serial.begin(9600);
 lcd.begin(16, 2);
-}
+}b
   int buttonState[4];  
   int last_button[4];
   int in=0;
