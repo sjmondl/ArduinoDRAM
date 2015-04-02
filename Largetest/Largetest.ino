@@ -1,22 +1,11 @@
 #include <LiquidCrystal.h>
 
 #define DELAY_AMOUNT 1
-#define SENSE_TIME 80
-#define WRITE_TIME 500 //dont reduce past 5, the arduino cant deacivate pins fast enough to prevent artifacts
+#define SENSE_TIME 80 //How long the sense amp should stay lit before activating the cell
+#define WRITE_TIME 500 
+#define FLICKER 2
 
-
-/*Subroutines included in this file:
- // void memWrite(int pina,int pinb), lights a row and a column, handles errors for cells that can
- // void lightRow(int pinb), lights the row associated with pinb
- // void lightCol(intpina), lights the column associated with pina
- // void lightLeds(int pina, int pinb), lights the LED associated with pina,pinb for the amount determined by DELAY_AMOUNT
- // void lightLeds(int pina, int pinb, delay_am), lights the LED associated with pina,pinb for the amount determined by delay_am
- // void fadeLeds(int pina, int pinb), Fades the LED associated with pina, pinb
- // void cycle(byte pins[], int sizeOfPins); cycles through all hooked up LEDs one at a time
- // void cycle(), same as above, use this one to call it for testing
- // void cycle(byte pins_x[], byte pins_y[], int sizeOfPins_x, int sizeOfPins_y), same as above
- // void run_unittests(), testing program
- */
+/*Subroutines */
 
 byte pins[] = {
   2,3,4,5,6,7,8,9,10,11,12,13,44,45,46};
@@ -26,8 +15,7 @@ byte topBitline[] = {
 byte bottomBitline[] ={
   7,5,3};
 
-byte senseAmpRow[]={
-  9};
+byte senseAmpRow[]={9}; 
 
 byte wordlines[]={
   46,44,12,10,8,6,4,2};
@@ -36,145 +24,9 @@ byte noCellWordlines[]={
 
 
 int sizePins = 15;
-int prgmSelected = 0;
-/////////////////////////////////////////////////////////////////////////////////////
-/*Memory write routine*/
-//OUTDATED. DO NOT USE. I left it here for reference. Will be removed at final revision
-void memWrite(int pina, int pinb){
-
-
-  //Error handling for cells with inconsistant pins, i.e. the diagonal cells
-  //Take the invalid cells and light them using those pins, but alter the row 
-  //and column pins to achieve correct behavior
-  int pinRow = pina;
-  int pinCol = pinb;
-
-
-  if(pina == 45&& pinb ==13){
-    pinRow = 46;
-    pinCol = 46;
-  }
-
-  if(pina == 13&& pinb ==45){
-    pinRow = 44;
-    pinCol = 44;
-  }
-
-  if(pina == 13&& pinb ==11){
-    pinRow = 12;
-    pinCol = 12;
-  }
-
-  if(pina==45 && pinb==9){
-    pinRow = 10;
-    pinCol = 10;
-  }
-
-  if(pina==9 && pinb==7){
-    pinRow = 8;
-    pinCol = 8;
-  }
-
-  if(pina==7 && pinb==5){
-    pinRow = 6;
-    pinCol = 6;
-  }
-  if(pina==5 && pinb==3){ 
-    pinRow = 4;
-    pinCol = 4;
-  }
-  if(pina==3 && pinb==5){
-    pinRow = 3;
-    pinCol = 3;
-  }
-
-  //Light columns and rows, cycle program 1000 times(~1-3s)
-  for (int k = 0; k<100; ++k)
-  {
-    //Light column
-    lightCol(pinCol);
-    //Light row
-    lightRow(pinRow);
-
-  }
-
-
-  //Light memory cell, hold for ~4s 
-  // lightLeds(pina,pinb, 4000);
-  fadeLeds(pina,pinb, 10, 100, 1 );
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//Light a row of LEDs. PinA varries while pinb is fixed, Cells included, no handling of inconsistant pins
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-void lightRow(int pinb){
 
 
 
-  pinMode(pinb, OUTPUT);
-  digitalWrite(pinb, LOW);
-
-
-  for (int i = 0; i < sizePins; ++i)
-  {    
-    pinMode(pins[i], OUTPUT);
-    if ((pins[i] != pinb && pins[i]) ){ 
-
-      digitalWrite(pins[i], HIGH);
-      if( pinb==46 && pins[i] ==46){
-        pinMode(13, INPUT);
-      }
-      if(pinb ==11 && pins[i] ==13){
-        pinMode(13, INPUT);
-      }
-    }
-  }
-
-
-  delay(WRITE_TIME);
-  for (int j=0;j < sizePins; ++j) {
-    pinMode(pins[j], INPUT);
-
-    pinMode(pinb, INPUT);
-
-
-
-  }
-}
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//Light a Column of LEDs, includes cells and sense amps
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-void lightCol(int pina){
-
-
-  pinMode(pina, OUTPUT);
-  digitalWrite(pina, HIGH);
-
-
-  for (int i = 0; i < sizePins; ++i)
-  {    
-    pinMode(pins[i], OUTPUT);
-    if (pins[i] != pina){ 
-      digitalWrite(pins[i], LOW);
-
-    }
-  }
-  delay(WRITE_TIME);
-  for (int j=0;j < sizePins; ++j)
-  { 
-    pinMode(pins[j], INPUT);
-  }
-
-  pinMode(pina, INPUT);
-
-
-}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,12 +182,31 @@ void fadeLeds(int pina,int pinb,double rate,double delayAm, double bright)
     ++i;
   }
   analogWrite(pinb, bright*255);
-  delay(delayAm);
-  pinMode(pina, INPUT);
-  pinMode(pinb, INPUT);
+ delay(delayAm);
+ pinMode(pina, INPUT);
+ pinMode(pinb, INPUT);
 }
 
-
+//////////////////////////////////////////////////////////////////
+//Light 2 test
+//////////////////
+void lightTwo(int pin1, int pin2, int pin3, int pin4, int delayAm){
+  pinMode(pin1, OUTPUT);
+  pinMode(pin2, OUTPUT);
+  digitalWrite(pin2, LOW);
+  analogWrite(pin1,255);
+  delay(delayAm);
+  pinMode(pin1, INPUT);
+  pinMode(pin2, INPUT);
+   pinMode(pin3, OUTPUT);
+  pinMode(pin4, OUTPUT);
+  digitalWrite(pin4, LOW);
+  analogWrite(pin3,255);
+  delay(delayAm);
+  pinMode(pin3, INPUT);
+  pinMode(pin4, INPUT);
+  
+}
 
 /** 
  * Run the default cycle
@@ -625,17 +496,284 @@ void bitCycle(){
   }
 
 }
+void lightMult( double bright,
+                int pin1, int pin2, int rate1, 
+                int pin3, int pin4, int rate2, 
+                int pin5, int pin6, int rate3,
+                int pin7, int pin8, int rate4,
+                int pin9, int pin10,int rate5){
+ if(pin1 == 46&& pin2 ==46){
+    pin1 = 45;
+    pin2 = 13;
+  }
 
-void writeCell(int pina, int pinb){
+  if(pin1 == 45&& pin2 ==45){
+    pin1 = 13;
+    pin2 = 45;
+  }
+
+  if(pin1 == 12&& pin2 ==12){
+    pin1 = 13;
+    pin2 = 11;
+  }
+
+  if(pin1==10 && pin2==10){
+    pin1 = 45;
+    pin2 = 9;
+  }
+
+  if(pin1==8 && pin2==8){
+    pin1 = 9;
+    pin2 = 7;
+  }
+
+  if(pin1==6 && pin2==6){
+    pin1 = 7;
+    pin2 = 5;
+  }
+  if(pin1==4 && pin2==4){ 
+    pin1 = 5;
+    pin2 = 3;
+  }
+  if(pin1==3 && pin2==3){
+    pin1 = 3;
+    pin2 = 5;
+  }
+
+  if(pin3 == 46&& pin4 ==46){
+    pin3 = 45;
+    pin4 = 13;
+  }
+
+  if(pin3 == 45&& pin4 ==45){
+    pin3 = 13;
+    pin4 = 45;
+  }
+
+  if(pin3 == 12&& pin4 ==12){
+    pin3 = 13;
+    pin4 = 11;
+  }
+
+  if(pin3==10 && pin4==10){
+    pin3 = 45;
+    pin4 = 9;
+  }
+
+  if(pin3==8 && pin4==8){
+    pin3 = 9;
+    pin4 = 7;
+  }
+
+  if(pin3==6 && pin4==6){
+    pin3 = 7;
+    pin4 = 5;
+  }
+  if(pin3==4 && pin4==4){ 
+    pin3 = 5;
+    pin4 = 3;
+  }
+  if(pin3==3 && pin4==3){
+    pin3 = 3;
+    pin4 = 5;
+  }
+  if(pin5 == 46&& pin6 ==46){
+    pin5 = 45;
+    pin6 = 13;
+  }
+
+  if(pin5 == 45&& pin6 ==45){
+    pin5 = 13;
+    pin6 = 45;
+  }
+
+  if(pin5 == 12&& pin6 ==12){
+    pin5 = 13;
+    pin6 = 11;
+  }
+
+  if(pin5==10 && pin6==10){
+    pin5 = 45;
+    pin6 = 9;
+  }
+
+  if(pin5==8 && pin6==8){
+    pin5 = 9;
+    pin6 = 7;
+  }
+
+  if(pin5==6 && pin6==6){
+    pin5 = 7;
+    pin6 = 5;
+  }
+  if(pin5==4 && pin6==4){ 
+    pin5 = 5;
+    pin6 = 3;
+  }
+  if(pin5==3 && pin6==3){
+    pin5 = 3;
+    pin6 = 5;
+  }
+  if(pin7 == 46&& pin8 ==46){
+    pin7 = 45;
+    pin8 = 13;
+  }
+
+  if(pin7 == 45&& pin8 ==45){
+    pin7 = 13;
+    pin8 = 45;
+  }
+
+  if(pin7 == 12&& pin8 ==12){
+    pin7 = 13;
+    pin8 = 11;
+  }
+
+  if(pin7==10 && pin8==10){
+    pin7 = 45;
+    pin8 = 9;
+  }
+
+  if(pin7==8 && pin8==8){
+    pin7 = 9;
+    pin8 = 7;
+  }
+
+  if(pin7==6 && pin8==6){
+    pin7 = 7;
+    pin8 = 5;
+  }
+  if(pin7==4 && pin8==4){ 
+    pin7 = 5;
+    pin8 = 3;
+  }
+  if(pin7==3 && pin8==3){
+    pin7 = 3;
+    pin8 = 5;
+  }
+  if(pin9 == 46&& pin10 ==46){
+    pin9 = 45;
+    pin10 = 13;
+  }
+
+  if(pin9 == 45&& pin10 ==45){
+    pin9 = 13;
+    pin10 = 45;
+  }
+
+  if(pin9 == 12&& pin10 ==12){
+    pin9 = 13;
+    pin10 = 11;
+  }
+
+  if(pin9==10 && pin10==10){
+    pin9 = 45;
+    pin10 = 9;
+  }
+
+  if(pin9==8 && pin10==8){
+    pin9 = 9;
+    pin10 = 7;
+  }
+
+  if(pin9==6 && pin10==6){
+    pin9 = 7;
+    pin10 = 5;
+  }
+  if(pin9==4 && pin10==4){ 
+    pin9 = 5;
+    pin10 = 3;
+  }
+  if(pin9==3 && pin10==3){
+    pin9 = 3;
+    pin10 = 5;
+  }
+  int j,k,l,m = 0;
+ for(int i =0; i<bright*250; i++){  
+
+     
+  pinMode(pin1, OUTPUT);
+  pinMode(pin2, OUTPUT);
+  
+   analogWrite(pin1,(bright*255));
+   analogWrite(pin2, i);
+
+
+  delay(FLICKER);
+   pinMode(pin1, INPUT);
+   pinMode(pin2, INPUT);
+ 
+ 
+  pinMode(pin3, OUTPUT);
+  pinMode(pin4, OUTPUT);
+  
+    analogWrite(pin3,(bright*255));
+     analogWrite(pin4, j);
+     j=j+rate2; 
+       delay(FLICKER);
+   pinMode(pin3, INPUT);
+ pinMode(pin4, INPUT);
+  
+  pinMode(pin5, OUTPUT);
+  pinMode(pin6, OUTPUT);
+  
+ analogWrite(pin5,(bright*255));
+  analogWrite(pin6, k);
+  k=k+rate3;
+  delay(FLICKER);
+ pinMode(pin5, INPUT);
+ pinMode(pin6, INPUT);
+
+
+  pinMode(pin7, OUTPUT);
+  pinMode(pin8, OUTPUT);
+  
+   analogWrite(pin7,(bright*255));
+       analogWrite(pin8, l);
+       l=l+rate3; 
+       delay(FLICKER);
+   pinMode(pin7, INPUT);
+ pinMode(pin8, INPUT);
+  
+  pinMode(pin9, OUTPUT);
+  pinMode(pin10, OUTPUT);
+
+  analogWrite(pin9,(bright*255));
+      analogWrite(pin10, m);
+      m=m+rate5; 
+        delay(FLICKER);
+      
+ pinMode(pin9, INPUT);
+ pinMode(pin10, INPUT);
+
+   }
+                  
+                  
+                  
+                  
+                  
+                  
+
+
+
+ 
+ 
+
+    
+}
+void writeCell(int pina, int pinb, int pinc, int pind){
 for(int i =0; i<10000; i++){
   bitWord(pina,pinb);
+  bitWord(pinc,pind);
 }
 lightSingle(9,pinb);
- fadeLeds(pina,pinb, 10, 100, 1 );
+lightSingle(9,pind);
+fadeLeds(pina,pinb, 10, 100, 1 );
+fadeLeds(pinc,pind, 10, 100, 1 );
 
 }
 void loop(){
-writeCell(44,46);
+lightMult(1,2,46, 1, 4,44, 2, 4,12,3, 6,10,4, 8,2,5);
 }
 
 
