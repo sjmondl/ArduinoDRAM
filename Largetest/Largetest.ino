@@ -1,7 +1,7 @@
 #include <LiquidCrystal.h>
 
 #define DELAY_AMOUNT 1
-#define SENSE_TIME 80 //How long the sense amp should stay lit before activating the cell
+#define SENSE_TIME 8 //How long the sense amp should stay lit before activating the cell
 #define WRITE_TIME 500 
 #define FLICKER 2
 
@@ -30,7 +30,7 @@ int sizePins = 15;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//Light LEDs, pina fixed, while pinb cycles
+//Light LEDs, pina fixed, while pinb cycles                                                        //
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void lightLeds(int pina, int pinb)
 {
@@ -99,7 +99,9 @@ void lightSingle(int pina, int pinb){
   pinMode(pinb, OUTPUT);
   digitalWrite(pinb, LOW);
   analogWrite(pina, 255);
-
+  delay(SENSE_TIME);
+  pinMode(pina, INPUT);
+  pinMode(pinb,INPUT);
    
   
 }
@@ -471,8 +473,7 @@ void bitWord(int pina, int pinb){
 
 }
 
-void setup(){
-}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //Cycle through word lines (Rows, no cells)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -695,7 +696,7 @@ void lightMult( double bright,
   pinMode(pin1, OUTPUT);
   pinMode(pin2, OUTPUT);
   
-   analogWrite(pin1,(bright*255));
+   analogWrite(pin1,(bright*250));
    analogWrite(pin2, i);
 
 
@@ -707,9 +708,13 @@ void lightMult( double bright,
   pinMode(pin3, OUTPUT);
   pinMode(pin4, OUTPUT);
   
-    analogWrite(pin3,(bright*255));
+    analogWrite(pin3,(bright*250));
+    if(j>=bright*250){
+      j=250;
+    }
      analogWrite(pin4, j);
-     j=j+rate2; 
+     if (j<=bright*250){
+     j=j+rate2; }
        delay(FLICKER);
    pinMode(pin3, INPUT);
  pinMode(pin4, INPUT);
@@ -717,9 +722,15 @@ void lightMult( double bright,
   pinMode(pin5, OUTPUT);
   pinMode(pin6, OUTPUT);
   
- analogWrite(pin5,(bright*255));
+ analogWrite(pin5,(bright*250));
+ if(k>=bright*250){
+      k=250;
+    }
   analogWrite(pin6, k);
+       if (k<bright*250){
+
   k=k+rate3;
+       }
   delay(FLICKER);
  pinMode(pin5, INPUT);
  pinMode(pin6, INPUT);
@@ -728,9 +739,15 @@ void lightMult( double bright,
   pinMode(pin7, OUTPUT);
   pinMode(pin8, OUTPUT);
   
-   analogWrite(pin7,(bright*255));
+   analogWrite(pin7,(bright*250));
+   if(l>=bright*250){
+      l=250;
+    }
        analogWrite(pin8, l);
-       l=l+rate3; 
+            if (j<bright*250){
+
+      l=l+rate4; 
+            }
        delay(FLICKER);
    pinMode(pin7, INPUT);
  pinMode(pin8, INPUT);
@@ -738,9 +755,14 @@ void lightMult( double bright,
   pinMode(pin9, OUTPUT);
   pinMode(pin10, OUTPUT);
 
-  analogWrite(pin9,(bright*255));
-      analogWrite(pin10, m);
-      m=m+rate5; 
+  analogWrite(pin9,(bright*250));
+  if(m>=bright*250){
+     m=250;
+    }
+  analogWrite(pin10, m);
+       if (m<=bright*250){
+            m=m+rate5;
+       }
         delay(FLICKER);
       
  pinMode(pin9, INPUT);
@@ -772,10 +794,25 @@ fadeLeds(pina,pinb, 10, 100, 1 );
 fadeLeds(pinc,pind, 10, 100, 1 );
 
 }
-void loop(){
-lightMult(1,2,46, 1, 4,44, 2, 4,12,3, 6,10,4, 8,2,5);
+void writeMultiCell(int pin1,int pin2,int pin3,int pin4,int pin5,int pin6,int pin7,int pin8,int pin9, int pin10){
+  for(int i =0; i<1000; i++){
+      bitWord(pin1,pin2);
+      bitWord(pin3,pin4);
+      bitWord(pin5,pin6);
+      bitWord(pin7,pin8);
+      bitWord(pin9,pin10);
+  }
+ lightSingle(9,pin2);
+lightSingle(9,pin4);
+ lightSingle(9,pin6);
+lightSingle(9,pin8);
+lightSingle(9,pin10);
+
+  lightMult(1,pin1,pin2, 1, pin3,pin4, 2, pin5,pin6,3, pin7,pin8 ,4, pin9,pin10,5);
 }
 
+
+//void loop(){
 
 
 

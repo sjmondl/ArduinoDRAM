@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-
+//LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //set up LCD pins
 LiquidCrystal lcd(30, 32, 34, 35, 33, 31); //set up LCD pins
 
 void setup() 
@@ -10,13 +10,16 @@ void setup()
   pinMode(51, INPUT);
   //Serial.begin(9600);
 lcd.begin(16, 2);
-}b
+}
   int buttonState[4];  
   int last_button[4];
   int in=0;
   int state =1;
-  
-void loop()
+  void loop(){
+      writeMultiCell(46,46,12,44,  8,12, 6,10, 2,44);
+
+  }
+void test()
 {
   //This part of the code reads in the buttons, setting a button push to be a value of 1, 2, 3, or 4 depending on the button pushed; this becomes the input to the state machine
   //To keep the button from being read multiple times the code will not proceed if the button state is the same as it was on the last execution of the code
@@ -92,7 +95,8 @@ else if (state == 2)
   else if (in == 2){//down
     state = 3;}
   else if (in == 3){//sel
-    state = 12;}//CHANGE THIS WHEN THE SETTINGS SELECT STATES ARE ADDED
+    state = 12;}//CHANGE THIS WHEN THE SETTINGS SELECT STATES ARE ADDED 
+    /*WTF do you mean?*/
   else if (in == 4){//back
     state = 2;}
   else if (in == 0){
@@ -117,6 +121,8 @@ else if (state == 3)
   {
     state = 3;
     //RUN AUTOMATIC REFRESH, RUN DEFAULT SETTINGS, RUN RANDOM R/W
+    writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
   }
   else if (in == 4){//back
     state = 3;}
@@ -175,6 +181,8 @@ else if (state == 6)
   //lcd.noAutoscroll();
   lcd.setCursor(1,0);
   lcd.print("Random R/W<           ");
+
+
   lcd.setCursor(0,1);
   lcd.print("Single Read(v)        ");
   
@@ -183,8 +191,11 @@ else if (state == 6)
   else if (in == 2){//down
     state = 7;}
   else if (in == 3){//sel
-    state = 6;}
+    state = 6;
   //RUN RANDOM READ WRITE PROGRAM TO SET BOARD TO RANDOM READ WRITE MODE
+   writeMultiCell(46,46,12,44,  8,12, 6,10, 2,44);
+  }
+
   else if (in == 4){//back
     state = 4;}
   else if (in == 0){
@@ -229,8 +240,15 @@ else if (state == 8)
   else if (in == 2){//down
     state = 8;}
   else if (in == 3){//sel
-    state = 8;}
+    state = 8;
     //RUN A SINGLE WRITE PROGRAM AND THEN SET BOARD TO RANDOM READ WRITE MODE AFTER FINISHED
+    writeCell(44,12,0,0);
+    writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+    
+    
+    
+  }
   else if (in == 4){//back
     state = 4;}
   else if (in == 0){
@@ -298,8 +316,11 @@ else if (state == 11)
   else if (in == 2){//down
     state = 11;}
   else if (in == 3){//sel
-    state = 11;}
+    state = 11;
   //RUN A MANUAL REFRESH ON THE LEDS IN THE BOARD
+    writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+    }
   else if (in == 4){//back
     state = 9;}
   else if (in == 0){
@@ -345,6 +366,7 @@ else if (state == 13)
   else if (in == 3){//sel
     state = 13;}
     //RUN A PROGRAM THAT SETS THE SPEED OF EVERYTHING TO FAST
+    //Can you please be more specific? Cell drainage rates, delays?
   else if (in == 4){//back
     state = 12;}
   else if (in == 0){
@@ -389,8 +411,12 @@ else if (state == 15)
   else if (in == 2){//down
     state = 16;}
   else if (in == 3){//sel
-    state = 15;}
+    state = 15;
+     lcd.print("Coming Soon    ");
+  }
     //RUNS A PROGRAM THAT INSERTS PREALOCATED BAD CELLS INTO THE LED ARRAY AND CHOOSES REPLACEMENT LEDS
+    
+    /*What is this supposed to look like?*/
   else if (in == 4){//back
     state = 2;}
   else if (in == 0){
@@ -459,6 +485,7 @@ else if (state == 18)
   else if (in == 3){//sel
     state = 18;}
   //RUN A PROGRAM THAT SETS THE REFRESH RATE TO FAST
+  //Easy to say, hard to do
   else if (in == 4){//back
     state = 12;}
   else if (in == 0){
@@ -480,7 +507,8 @@ else if (state == 19)
   else if (in == 2){//down
     state = 19;}
   else if (in == 3){//sel
-    state = 19;}
+    state = 19;
+  }
     //RUNS A PROGRAM THAT SETS THE REFRESH RATE TO SLOW
   else if (in == 4){//back
     state = 12;}
@@ -491,6 +519,7 @@ else if (state == 19)
 //
 in = 0;//reset input for next loop execution 
 }  
+
 
 
 
