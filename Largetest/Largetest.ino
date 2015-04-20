@@ -634,6 +634,9 @@ void bitCycle(){
   }
 
 }
+/*
+Lights multiple LEDs at the same time, use rate to set rate of fade. Higher rates fade faster
+*/
 void lightMult( double bright,
                 int pin1, int pin2, int rate1, 
                 int pin3, int pin4, int rate2, 
@@ -925,6 +928,9 @@ void lightMult( double bright,
 
     
 }
+/*
+Write cells, activates bit and word lines
+*/
 void writeCell(int pina, int pinb, int pinc, int pind){
 for(int i =0; i<10000; i++){
   bitWord(pina,pinb);
@@ -955,7 +961,7 @@ void writeMultiCell(int pin1,int pin2,int pin3,int pin4,int pin5,int pin6,int pi
 
 
 void loop(){
-run_unittests();
+writeCell(12,44,44,6);
 }
 
 
