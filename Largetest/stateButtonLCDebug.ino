@@ -15,11 +15,11 @@ lcd.begin(16, 2);
   int last_button[4];
   int in=0;
   int state =1;
-  void loop(){
-      writeMultiCell(46,46,12,44,  8,12, 6,10, 2,44);
+  void test(){
+         bitTop50(4);
 
   }
-void test()
+void test2()
 {
   //This part of the code reads in the buttons, setting a button push to be a value of 1, 2, 3, or 4 depending on the button pushed; this becomes the input to the state machine
   //To keep the button from being read multiple times the code will not proceed if the button state is the same as it was on the last execution of the code
@@ -123,6 +123,8 @@ else if (state == 3)
     //RUN AUTOMATIC REFRESH, RUN DEFAULT SETTINGS, RUN RANDOM R/W
     writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
     writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+        writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,10, 2,4,   10,8, 8,12 ,2,46);
   }
   else if (in == 4){//back
     state = 3;}
@@ -194,6 +196,10 @@ else if (state == 6)
     state = 6;
   //RUN RANDOM READ WRITE PROGRAM TO SET BOARD TO RANDOM READ WRITE MODE
    writeMultiCell(46,46,12,44,  8,12, 6,10, 2,44);
+    writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+        writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,10, 2,4,   10,8, 8,12 ,2,46);
   }
 
   else if (in == 4){//back
@@ -245,6 +251,10 @@ else if (state == 8)
     writeCell(44,12,0,0);
     writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
     writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+     writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+        writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,10, 2,4,   10,8, 8,12 ,2,46);
     
     
     
@@ -270,7 +280,14 @@ else if (state == 9)
   else if (in == 2){//down
     state = 10;}
   else if (in == 3){//sel
-    state = 9;}
+    state = 9;
+  writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+     writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+        writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,10, 2,4,   10,8, 8,12 ,2,46);
+    }
   //SET THE LEDS TO RUN IN AUTOMATIC REFRESH MODE
   else if (in == 4){//back
     state = 4;}
@@ -293,7 +310,8 @@ else if (state == 10)
   else if (in == 2){//down
     state = 10;}
   else if (in == 3){//sel
-    state = 11;}
+    state = 11;
+   lcd.print("Coming Soon         ");}
   //DISABLE THE AUTOMATIC REFRESH ROUTINE, ENABLE MANUAL REFRESH MODE
   else if (in == 4){//back
     state = 4;}
@@ -318,8 +336,13 @@ else if (state == 11)
   else if (in == 3){//sel
     state = 11;
   //RUN A MANUAL REFRESH ON THE LEDS IN THE BOARD
-    writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
     writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+     writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,12, 2,4,   4,44, 8,12 ,44,2);
+        writeMultiCell(12,46,46,2,  12,44, 2,6 ,2,4);
+    writeMultiCell(44,10, 2,4,   10,8, 8,12 ,2,46);
+    
     }
   else if (in == 4){//back
     state = 9;}
@@ -342,7 +365,9 @@ else if (state == 12)
   else if (in == 2){//down
     state = 15;}
   else if (in == 3){//sel
-    state = 13;}
+    state = 13;
+   lcd.print("Coming Soon         ");}
+   
   else if (in == 4){//back
     state = 2;}
   else if (in == 0){
@@ -364,7 +389,8 @@ else if (state == 13)
   else if (in == 2){//down
     state = 14;}
   else if (in == 3){//sel
-    state = 13;}
+    state = 13;
+   lcd.print("Coming Soon         ");}
     //RUN A PROGRAM THAT SETS THE SPEED OF EVERYTHING TO FAST
     //Can you please be more specific? Cell drainage rates, delays?
   else if (in == 4){//back
@@ -420,7 +446,8 @@ else if (state == 15)
   else if (in == 4){//back
     state = 2;}
   else if (in == 0){
-    state = 15;}
+    state = 15;
+   lcd.print("Coming Soon         ");}
 }
 else if (state == 16)
 {
@@ -438,7 +465,9 @@ else if (state == 16)
   else if (in == 2){//down
     state = 17;}
   else if (in == 3){//sel
-    state = 16;}
+    state = 16;
+     lcd.print("Coming Soon         ");
+  }
   //RUNS A PROGRAM THAT REMOVES THE PREALOCATED BAD CELLS FROM THE ARRAY AND DISSABLE REPLACEMENT LEDS
   else if (in == 4){//back
     state = 2;}
@@ -483,9 +512,22 @@ else if (state == 18)
   else if (in == 2){//down
     state = 19;}
   else if (in == 3){//sel
-    state = 18;}
+    state = 18;
   //RUN A PROGRAM THAT SETS THE REFRESH RATE TO FAST
-  //Easy to say, hard to do
+ for(int i=0; i<5; i++){
+    for(int i =0; i<100; i++){
+  bitWord(4,12);
+  bitWord(12,8);
+}
+lightSingle(9,12);
+lightSingle(9,8);
+fadeLeds(46,44, 10, 100, 1 );
+fadeLeds(44,8, 10, 100, 1 );
+ 
+  delay(10);
+ }
+}
+
   else if (in == 4){//back
     state = 12;}
   else if (in == 0){
@@ -508,8 +550,22 @@ else if (state == 19)
     state = 19;}
   else if (in == 3){//sel
     state = 19;
-  }
+  
     //RUNS A PROGRAM THAT SETS THE REFRESH RATE TO SLOW
+    for(int i=0; i<5; i++){
+    for(int i =0; i<100; i++){
+  bitWord(46,44);
+  bitWord(44,8);
+}
+lightSingle(9,44);
+lightSingle(9,8);
+fadeLeds(46,44, 10, 100, 1 );
+fadeLeds(44,8, 10, 100, 1 );
+  
+  delay(1000);
+    }
+}
+
   else if (in == 4){//back
     state = 12;}
   else if (in == 0){

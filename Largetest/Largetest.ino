@@ -1,8 +1,8 @@
 #include <LiquidCrystal.h>
 
 #define DELAY_AMOUNT 1
-#define SENSE_TIME 8 //How long the sense amp should stay lit before activating the cell
-#define WRITE_TIME 500 
+#define SENSE_TIME 15 //How long the sense amp should stay lit before activating the cell
+#define WRITE_TIME 0
 #define FLICKER 2
 
 /*Subroutines */
@@ -369,7 +369,7 @@ void lightTopBitline(int pina){
 void lightbtmBitline(int pina){ 
 
   pinMode(pina, OUTPUT);
-  digitalWrite(pina, LOW);
+  analogWrite(pina, LOW);
 
   for(int i =0; i<3; i++){
 
@@ -414,7 +414,7 @@ void lightbtmBitline(int pina){
         pinMode( bottomBitline[i], INPUT);
       }
       else{
-        //Ligth the LEDs
+        //Light the LEDs
         digitalWrite(bottomBitline[i], HIGH);
         pinMode(bottomBitline[i], OUTPUT);
       }
@@ -460,19 +460,156 @@ void lightWord(int pina){
 // Light word and bit lines
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void bitWord(int pina, int pinb){
-
-
-  lightWord(pina);
-//  if(pina >9){
+//for(int i =0; i<10; i++){
+// lightWord(pina);
+  
+//bitTop50(pinb);
+ //bitBtm50(pinb);
+// //}
+//  pinMode(pina, INPUT); 
+//  pinMode(pinb, INPUT); 
+ lightWord(pina);
+//if(pinb >9){
     lightTopBitline(pinb);
-//  }
-//if(pina <9){
-    lightbtmBitline(pinb);
-//  }
+// }
+//if(pinb<9){
+   lightbtmBitline(pinb);
+// }
+
+
+}
+void bitTop50(int pina){
+ pinMode(pina, OUTPUT);
+  analogWrite(pina, 0);
+
+  for(int i =0; i<3; i++){
+
+    if ((topBitline[i] != pina) ){ 
+      if(pina == 45&&  topBitline[i] ==13){
+        analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+
+      if(pina == 13&&  topBitline[i] ==45){
+         analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+
+      if(pina == 13&&  topBitline[i] ==11){
+         analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+
+      if(pina==45 &&  topBitline[i]==9){
+         analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+
+      if(pina==9 &&  topBitline[i]==7){
+         analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+
+      if(pina==7 &&  topBitline[i]==5){
+          analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+      if(pina==5 &&  topBitline[i]==3){ 
+         analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+      if(pina==3 &&  topBitline[i]==5){
+          analogWrite(pina,  0);
+        analogWrite( topBitline[i],  0);
+      }
+      else{
+
+        analogWrite(topBitline[i], 160);
+        pinMode(topBitline[i], OUTPUT);
+
+
+      }
+    }
+  }
+
+  // delay(WRITE_TIME);
+  for (int j=0;j < 3; ++j) {
+    pinMode(topBitline[j],  INPUT_PULLUP);
+    pinMode(pina,  INPUT_PULLUP);
+
+
+
+  }
 
 
 }
 
+void bitBtm50(int pina){
+  
+  
+    pinMode(pina, OUTPUT);
+  analogWrite(pina, 0);
+
+  for(int i =0; i<3; i++){
+
+    if ((bottomBitline[i] != pina) ){ 
+
+      //Handle the diagnal pins with inconsistant numbering
+      if(pina == 45&&  bottomBitline[i] ==13){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+
+      if(pina == 13&&  bottomBitline[i] ==45){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+
+      if(pina == 13&&  bottomBitline[i] ==11){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+
+      if(pina==45 &&  bottomBitline[i]==9){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+
+      if(pina==9 &&  bottomBitline[i]==7){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+
+      if(pina==7 &&  bottomBitline[i]==5){
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+      if(pina==5 &&  bottomBitline[i]==3){ 
+        pinMode(pina, INPUT);
+        pinMode( bottomBitline[i], INPUT);
+      }
+      if(pina==3 &&  bottomBitline[i]==5){
+       pinMode(pina, INPUT);
+       pinMode( bottomBitline[i], INPUT);
+    
+      }
+      else{
+        //Light the LEDs
+
+analogWrite(bottomBitline[i], 50);
+        pinMode(bottomBitline[i], OUTPUT);
+      }
+    }
+  }
+
+
+//Deactivate the LEDs
+  for (int j=0;j < 3; ++j) {
+    pinMode(bottomBitline[j], INPUT);
+    pinMode(pina, INPUT);
+
+}
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //Cycle through word lines (Rows, no cells)
@@ -710,11 +847,13 @@ void lightMult( double bright,
   
     analogWrite(pin3,(bright*250));
     if(j>=bright*250){
-      j=250;
+      j=255;
     }
      analogWrite(pin4, j);
      if (j<=bright*250){
      j=j+rate2; }
+   
+       
        delay(FLICKER);
    pinMode(pin3, INPUT);
  pinMode(pin4, INPUT);
@@ -724,8 +863,9 @@ void lightMult( double bright,
   
  analogWrite(pin5,(bright*250));
  if(k>=bright*250){
-      k=250;
+      k=255;
     }
+        
   analogWrite(pin6, k);
        if (k<bright*250){
 
@@ -741,13 +881,14 @@ void lightMult( double bright,
   
    analogWrite(pin7,(bright*250));
    if(l>=bright*250){
-      l=250;
+      l=255;
     }
        analogWrite(pin8, l);
             if (j<bright*250){
 
       l=l+rate4; 
             }
+     
        delay(FLICKER);
    pinMode(pin7, INPUT);
  pinMode(pin8, INPUT);
@@ -757,12 +898,13 @@ void lightMult( double bright,
 
   analogWrite(pin9,(bright*250));
   if(m>=bright*250){
-     m=250;
+     m=255;
     }
   analogWrite(pin10, m);
        if (m<=bright*250){
             m=m+rate5;
        }
+   
         delay(FLICKER);
       
  pinMode(pin9, INPUT);
@@ -792,7 +934,7 @@ lightSingle(9,pinb);
 lightSingle(9,pind);
 fadeLeds(pina,pinb, 10, 100, 1 );
 fadeLeds(pinc,pind, 10, 100, 1 );
-
+ 
 }
 void writeMultiCell(int pin1,int pin2,int pin3,int pin4,int pin5,int pin6,int pin7,int pin8,int pin9, int pin10){
   for(int i =0; i<1000; i++){
@@ -803,17 +945,18 @@ void writeMultiCell(int pin1,int pin2,int pin3,int pin4,int pin5,int pin6,int pi
       bitWord(pin9,pin10);
   }
  lightSingle(9,pin2);
-lightSingle(9,pin4);
+ lightSingle(9,pin4);
  lightSingle(9,pin6);
-lightSingle(9,pin8);
-lightSingle(9,pin10);
+ lightSingle(9,pin8);
+ lightSingle(9,pin10);
 
   lightMult(1,pin1,pin2, 1, pin3,pin4, 2, pin5,pin6,3, pin7,pin8 ,4, pin9,pin10,5);
 }
 
 
-//void loop(){
-
+void loop(){
+run_unittests();
+}
 
 
 
